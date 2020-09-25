@@ -59,18 +59,22 @@ void GlfwWindowResizedCallback(GLFWwindow* window, int width, int height) {
 
 
 bool initGLFW() {
+
 	if (glfwInit() == GLFW_FALSE) {
 		LOG_ERROR("Failed to initialize GLFW");
 		return false;
 	}
-	// Set our window resized callback    
-	glfwSetWindowSizeCallback(window, GlfwWindowResizedCallback);
+
 
 	//Create a new GLFW window
 	window = glfwCreateWindow(800, 800, "INFR1350U", nullptr, nullptr);
 	glfwMakeContextCurrent(window);
 
+	// Set our window resized callback    
+	glfwSetWindowSizeCallback(window, GlfwWindowResizedCallback);
+
 	return true;
+
 }
 
 bool initGLAD() {
