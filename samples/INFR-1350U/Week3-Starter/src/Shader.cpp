@@ -71,7 +71,14 @@ bool Shader::LoadShaderPartFromFile(const char* path, GLenum type) {
 bool Shader::Link()
 {
 	// Todo: Implement
-	 // Remove shader parts to save space (we can do this since we only needed the shader parts to compile an actual shader program)
+	LOG_ASSERT(_vs != 0 && _fs != 0, "Must attach both a vertex and fragment shader!");
+
+	// Attach our two shaders
+	glAttachShader(_handle, _vs);
+	glAttachShader(_handle, _fs);
+	// Perform linking
+	glLinkProgram(_handle);
+	// Remove shader parts to save space (we can do this since we only needed the shader parts to compile an actual shader program)
 	glDetachShader(_handle, _vs);
 	glDeleteShader(_vs);
 	glDetachShader(_handle, _fs);
