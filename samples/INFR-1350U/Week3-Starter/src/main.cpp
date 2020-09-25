@@ -196,9 +196,33 @@ int main() {
 	 { 1, 3, GL_FLOAT, false, 0, NULL }
 		});
 
+	static const float interleaved[] = {
+		// X       Y     Z    R     G     B
+		 0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f,
+		 0.5f, 0.5f, 0.5f, 0.3f, 0.2f, 0.5f,
+		 -0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f,
+		 0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 1.0f
+	};
+	VertexBuffer* interleaved_vbo = new VertexBuffer();
+	interleaved_vbo->LoadData(interleaved, 6 * 4);
 
+	static const uint16_t indices[] = {
+		0, 1, 2,
+		1, 3, 2
+	};
+	IndexBuffer* interleaved_ibo = new IndexBuffer();
+	interleaved_ibo->LoadData(indices, 3 * 2);
+	
+	size_t stride = sizeof(float) * 6;
+	VertexArrayObject* vao2 = new VertexArrayObject();
+	vao2->AddVertexBuffer(interleaved_vbo, {
+		BufferAttribute(0, 3, GL_FLOAT, false, stride, 0),
+		BufferAttribute(1, 3, GL_FLOAT, false, stride, sizeof(float) * 3),
+	});
+	vao2->SetIndexBuffer(interleaved_ibo);
+
+	
 	// Load our shaders
-
 	/*if (!loadShaders())
 		return 1;
 		*/
@@ -233,8 +257,13 @@ int main() {
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 		*/
 		shader->Bind();
+
 		vao->Bind();
 		glDrawArrays(GL_TRIANGLES, 0, 3);
+
+		vao2->Bind();
+		glDrawElements(GL_TRIANGLES, interleaved_ibo->GetElementCount(), interleaved_ibo->GetElementType(), nullptr);
+		vao2->UnBind();
 
 		glfwSwapBuffers(window);
 	}
@@ -242,6 +271,9 @@ int main() {
 	// Clean up the toolkit logger so we don't leak memory
 	delete shader;
 	delete vao;
+	delete vao2;
+	delete interleaved_ibo;
+	delete interleaved_vbo;
 	delete posVbo;
 	delete color_vbo;
 
