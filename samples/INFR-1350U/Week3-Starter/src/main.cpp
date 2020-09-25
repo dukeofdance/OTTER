@@ -67,7 +67,7 @@ bool initGLFW() {
 
 
 	//Create a new GLFW window
-	window = glfwCreateWindow(800, 800, "INFR1350U", nullptr, nullptr);
+	window = glfwCreateWindow(800, 800, "Chan_Ehren_100753167", nullptr, nullptr);
 	glfwMakeContextCurrent(window);
 
 		// Set our window resized callback    
@@ -200,8 +200,8 @@ int main() {
 		// X       Y     Z    R     G     B
 		 0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f,
 		 0.5f, 0.5f, 0.5f, 0.3f, 0.2f, 0.5f,
-		 -0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f,
-		 0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 1.0f
+		 -0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f,
+		 0.5f, 0.5f, 0.5f, 1.0f, 0.4f, 0.2f
 	};
 	VertexBuffer* interleaved_vbo = new VertexBuffer();
 	interleaved_vbo->LoadData(interleaved, 6 * 4);
@@ -226,13 +226,15 @@ int main() {
 	/*if (!loadShaders())
 		return 1;
 		*/
-	LOG_INFO(glGetString(GL_VERSION));
 	Shader* shader = new Shader();
 	shader->LoadShaderPartFromFile("shaders/vertex_shader.glsl", GL_VERTEX_SHADER);
 	shader->LoadShaderPartFromFile("shaders/frag_shader.glsl", GL_FRAGMENT_SHADER);
 	shader->Link();
 
-
+	Shader* shader2 = new Shader();
+	shader2->LoadShaderPartFromFile("shaders/vertex_shader.glsl", GL_VERTEX_SHADER);
+	shader2->LoadShaderPartFromFile("shaders/frag_shader2.glsl", GL_FRAGMENT_SHADER);
+	shader2->Link();
 	// GL states
 	glEnable(GL_DEPTH_TEST);
 
@@ -261,6 +263,7 @@ int main() {
 		vao->Bind();
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
+		shader2->Bind();
 		vao2->Bind();
 		glDrawElements(GL_TRIANGLES, interleaved_ibo->GetElementCount(), interleaved_ibo->GetElementType(), nullptr);
 		vao2->UnBind();
